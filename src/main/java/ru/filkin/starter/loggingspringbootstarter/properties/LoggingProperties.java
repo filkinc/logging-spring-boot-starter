@@ -10,7 +10,6 @@ public class LoggingProperties {
 
     private String level;
 
-
     public boolean isEnabled() {
         return enabled;
     }
