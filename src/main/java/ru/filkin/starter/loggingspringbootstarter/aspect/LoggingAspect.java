@@ -7,13 +7,11 @@ import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import ru.filkin.starter.loggingspringbootstarter.properties.LoggingProperties;
 
 @Aspect
-@Component
 public class LoggingAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
@@ -62,8 +60,6 @@ public class LoggingAspect {
                 logAtLevel("Метод {} выполнен за {} мс", methodName, resultTime);
                 return result;
             } catch (Exception e) {
-                long resultTime = System.currentTimeMillis() - startTime;
-                logAtLevel("Метод {} выполнен за {} мс с исключением", methodName, resultTime);
                 throw e;
             }
     }
