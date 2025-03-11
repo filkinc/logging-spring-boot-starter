@@ -7,8 +7,6 @@ import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import ru.filkin.starter.loggingspringbootstarter.properties.LoggingProperties;
 
 @Aspect
@@ -25,10 +23,6 @@ public class LoggingAspect {
 
     @Pointcut("@annotation(ru.filkin.starter.loggingspringbootstarter.annotation.CustomAnnotation)")
     public void allMethods() {
-    }
-
-    @Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")
-    public void restControllerMethods() {
     }
 
     @Before("allMethods()")
@@ -63,21 +57,6 @@ public class LoggingAspect {
                 throw e;
             }
     }
-
-
-    @Before("restControllerMethods()")
-    public void logBeforeRequest(JoinPoint joinPoint) {
-            logger.debug("Работает logBeforeRequest, log level: {}", loggingProperties.getLevel());
-            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-            logAtLevel("HTTP Request: {} {}", request.getMethod(), request.getRequestURI());
-    }
-
-    @AfterReturning(pointcut = "restControllerMethods()", returning = "response")
-    public void logAfterResponse(JoinPoint joinPoint, Object response) {
-            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-            logAtLevel("HTTP Response: {} {} -> {}", request.getMethod(), request.getRequestURI(), response);
-    }
-
 
     public void logAtLevel(String message, Object... args) {
         String level = loggingProperties.getLevel().toLowerCase();
